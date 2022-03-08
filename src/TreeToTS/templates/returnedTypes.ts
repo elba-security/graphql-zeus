@@ -1,5 +1,6 @@
 import { Options, ParserField } from '@/Models';
 import { Helpers, TypeDefinition, TypeSystemDefinition } from '@/Models/Spec';
+import { customScalarsMap } from './customScalarsMap';
 
 export const TYPES = 'GraphQLTypes';
 
@@ -10,6 +11,7 @@ const typeScriptMap: Record<string, string> = {
   ID: 'string',
   String: 'string',
 };
+
 const toTypeScriptPrimitive = (a: string): string => typeScriptMap[a] || `${TYPES}["${a}"]`;
 
 const plusDescription = (description?: string, prefix = ''): string =>
@@ -71,6 +73,10 @@ export const resolveTypeFromRoot = (i: ParserField, rootNodes: ParserField[]): s
   }
   if (i.data.type === Helpers.Comment) {
     return `// ${i.description}`;
+  }
+  if (i.data.type === TypeDefinition.ScalarTypeDefinition) {
+    const type = customScalarsMap[i.name] || 'any';
+    return `${plusDescription(i.description)}["${i.name}"]:${type}`;
   }
   if (!i.args || !i.args.length) {
     return `${plusDescription(i.description)}["${i.name}"]:any`;

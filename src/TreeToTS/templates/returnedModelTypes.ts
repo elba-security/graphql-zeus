@@ -1,6 +1,7 @@
 import { Options, ParserField } from '@/Models';
 import { TypeDefinition, TypeSystemDefinition } from '@/Models/Spec';
 import { TYPES } from './returnedTypes';
+import { customScalarsMap } from './customScalarsMap';
 
 export const MODEL_TYPES = 'ModelTypes';
 
@@ -11,6 +12,7 @@ const typeScriptMap: Record<string, string> = {
   ID: 'string',
   String: 'string',
 };
+
 const toTypeScriptPrimitive = (a: string): string => typeScriptMap[a] || `${MODEL_TYPES}["${a}"]`;
 
 const plusDescription = (description?: string, prefix = ''): string =>
@@ -57,7 +59,8 @@ const resolveTypeFromRoot = (i: ParserField, rootNodes: ParserField[]): string =
     return '';
   }
   if (i.data.type === TypeDefinition.ScalarTypeDefinition) {
-    return `${plusDescription(i.description)}["${i.name}"]:any`;
+    const type = customScalarsMap[i.name] || 'any';
+    return `${plusDescription(i.description)}["${i.name}"]:${type}`;
   }
   if (!i.args || !i.args.length) {
     return ``;

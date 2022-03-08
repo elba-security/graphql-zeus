@@ -1,6 +1,7 @@
 import { Options, ParserField } from '@/Models';
 import { Helpers, TypeDefinition, TypeSystemDefinition } from '@/Models/Spec';
 import { truthyType } from '@/TreeToTS/templates/truthy';
+import { customScalarsMap } from './customScalarsMap';
 
 export const VALUETYPES = 'ValueTypes';
 
@@ -16,6 +17,7 @@ const typeScriptMap: Record<GqlTypes, TSTypes> = {
   ID: 'string',
   String: 'string',
 };
+
 const toTypeScriptPrimitive = (a: GqlTypes): string => typeScriptMap[a] || a;
 
 const plusDescription = (description?: string, prefix = ''): string =>
@@ -70,6 +72,11 @@ const resolveValueTypeFromRoot = (i: ParserField, rootNodes: ParserField[], enum
   }
   if (i.data.type === Helpers.Comment) {
     return '';
+  }
+
+  if (i.data.type === TypeDefinition.ScalarTypeDefinition) {
+    const type = customScalarsMap[i.name] || 'unknown';
+    return `${plusDescription(i.description)}["${i.name}"]:${type}`;
   }
 
   if (!i.args || !i.args.length) {
