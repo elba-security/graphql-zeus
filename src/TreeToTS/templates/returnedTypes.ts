@@ -32,15 +32,15 @@ const resolveField = (f: ParserField): string => {
       return `?: Array<${type}>`;
     }
     if (isArray && !isRequired && isArrayRequired) {
-      return `: Array<${type} | undefined>`;
+      return `: Array<${type} | null>`;
     }
     if (isArray && !isRequired && !isArrayRequired) {
-      return `?: Array<${type} | undefined>`;
+      return `: Array<${type} | null> | null`;
     }
     if (isRequired) {
       return `: ${type}`;
     }
-    return `?: ${type}`;
+    return `: ${type} | null`;
   };
   return `${plusDescription(f.description, '\t')}\t${f.name}${isNullType(toTypeScriptPrimitive(f.type.name))}`;
 };
