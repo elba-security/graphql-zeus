@@ -1,7 +1,7 @@
 export const customScalarsMap: Record<string, string> = {
   uuid: 'string',
   timestamptz: 'string',
-  json: 'string',
-  jsonb: 'string',
+  json: 'Record<string, any>',
+  jsonb: 'Record<string, any>',
   numeric: 'number',
 };
