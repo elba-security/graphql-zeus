@@ -2,6 +2,7 @@ import { Options, ParserField } from '@/Models';
 import { Helpers, TypeDefinition, TypeSystemDefinition } from '@/Models/Spec';
 import { truthyType } from '@/TreeToTS/templates/truthy';
 import { customScalarsMap } from './customScalarsMap';
+import { toTypeNameFromEnum } from './utils';
 
 export const VALUETYPES = 'ValueTypes';
 
@@ -90,7 +91,7 @@ const resolveValueTypeFromRoot = (i: ParserField, rootNodes: ParserField[], enum
     )}`;
   }
   if (i.data.type === TypeDefinition.EnumTypeDefinition) {
-    return `${plusDescription(i.description)}["${i.name}"]:${i.name}`;
+    return `${plusDescription(i.description)}["${i.name}"]:${toTypeNameFromEnum(i.name)}`;
   }
   if (i.data.type === TypeDefinition.InputObjectTypeDefinition) {
     return `${plusDescription(i.description)}["${i.name}"]: {\n${i.args.map((f) => resolveArg(f)).join(',\n')}\n}`;

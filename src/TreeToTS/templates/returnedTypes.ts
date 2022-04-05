@@ -1,6 +1,7 @@
 import { Options, ParserField } from '@/Models';
 import { Helpers, TypeDefinition, TypeSystemDefinition } from '@/Models/Spec';
 import { customScalarsMap } from './customScalarsMap';
+import { toTypeNameFromEnum } from './utils';
 
 export const TYPES = 'GraphQLTypes';
 
@@ -62,9 +63,9 @@ const resolveEnum = (i: ParserField): string => {
   if (!i.args) {
     throw new Error('Empty enum error');
   }
-  return `${plusDescription(i.description)}export enum ${i.name} {\n${i.args
-    .map((f) => `\t${f.name} = "${f.name}"`)
-    .join(',\n')}\n}`;
+  const typeName = toTypeNameFromEnum(i.name);
+  const stringLiterals = i.args.map((f) => `'${f.name}'`).join(' | ');
+  return `${plusDescription(i.description)}export type ${typeName} = ${stringLiterals}\n`;
 };
 
 export const resolveTypeFromRoot = (i: ParserField, rootNodes: ParserField[]): string => {
@@ -87,7 +88,7 @@ export const resolveTypeFromRoot = (i: ParserField, rootNodes: ParserField[]): s
 \t${i.args.map((f) => `['...on ${f.type.name}']: '__union' & ${TYPES}["${f.type.name}"];`).join('\n\t')}\n}`;
   }
   if (i.data.type === TypeDefinition.EnumTypeDefinition) {
-    return `${plusDescription(i.description)}["${i.name}"]: ${i.name}`;
+    return `${plusDescription(i.description)}["${i.name}"]: ${toTypeNameFromEnum(i.name)}`;
   }
   if (i.data.type === TypeDefinition.InputObjectTypeDefinition) {
     return `${plusDescription(i.description)}["${i.name}"]: {\n\t${i.args.map((f) => resolveField(f)).join(',\n')}\n}`;
