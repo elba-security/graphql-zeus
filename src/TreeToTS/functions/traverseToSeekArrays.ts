@@ -21,7 +21,7 @@ const traverseToSeekArrays = (parent: string[], a?: any): string => {
             const aliasOperationName = Object.keys(aliasOperations)[0];
             const aliasOperation = aliasOperations[aliasOperationName];
             b[
-              \`\${aliasOperationName}__alias__\${aliasKey}: \${aliasOperationName}\`
+              \`\${aliasKey}: \${aliasOperationName}\`
             ] = traverseToSeekArrays([...parent, aliasOperationName], aliasOperation);
           });
         } else {
