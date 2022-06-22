@@ -10,7 +10,6 @@ export * from './models';
 export * from './objectToTree';
 export * from './queryConstruct';
 export * from './resolveKV';
-export * from './seekForAliases';
 export * from './traverseToSeekArrays';
 export * from './variable';
 export * from './resolverFor';

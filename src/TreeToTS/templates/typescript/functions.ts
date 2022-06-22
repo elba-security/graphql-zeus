@@ -3,7 +3,6 @@ import {
   ZeusSelectFunction,
   TypePropsResolverFunction,
   traverseToSeekArraysFunction,
-  seekForAliasesFunction,
   ScalarResolverFunction,
   resolveKVFunction,
   queryConstructFunction,
@@ -30,7 +29,6 @@ ${inspectVariablesFunction.ts}
 ${queryConstructFunction.ts}  
 ${fullChainConstructFunction.ts}
 ${fullSubscriptionConstruct.ts}
-${seekForAliasesFunction.ts}
 ${VariableFunction.ts}
 ${resolverForFunction.ts}
 ${require(`./${env}/fetchFunction`).default}

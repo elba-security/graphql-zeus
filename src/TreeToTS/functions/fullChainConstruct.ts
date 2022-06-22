@@ -6,7 +6,6 @@ export const fullChainConstruct = (fn: FetchFunction) => (t: 'query' | 'mutation
   o: Record<any, any>,
   options?: OperationOptions,
 ) => fn(queryConstruct(t, tName, options?.operationName)(o), options?.variables).then((r:any) => { 
-  seekForAliases(r)
   return r
 });
 `,
