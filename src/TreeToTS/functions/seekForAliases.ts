@@ -2,7 +2,7 @@ import { StringFunction } from './models';
 
 export const seekForAliasesFunction: StringFunction = {
   ts: `
-const seekForAliases = (response: any) => {
+export const seekForAliases = (response: any) => {
   const traverseAlias = (value: any) => {
     if (Array.isArray(value)) {
       value.forEach(seekForAliases);
