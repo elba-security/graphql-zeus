@@ -10,13 +10,13 @@ export const resolveFieldType = (
   isRequired = false,
 ): string => {
   if (fType.type === Options.name) {
-    return fn(isRequired ? name : `${name} | undefined`);
+    return fn(isRequired ? name : `${name} | null`);
   }
   if (fType.type === Options.array) {
     return resolveFieldType(
       name,
       fType.nest,
-      isRequired ? (x) => `Array<${fn(x)}>` : (x) => `Array<${fn(x)}> | undefined`,
+      isRequired ? (x) => `Array<${fn(x)}>` : (x) => `Array<${fn(x)}> | null`,
       false,
     );
   }
@@ -28,7 +28,7 @@ export const resolveFieldType = (
 
 export const resolveField = (f: ParserField, t = TYPES): string => {
   const isNullType = (type: string): string => {
-    return f.type.fieldType.type === Options.required ? `: ${type}` : `?: ${type}`;
+    return f.type.fieldType.type === Options.required ? `: ${type}` : `: ${type}`;
   };
   return `${plusDescription(f.description, '\t')}\t${f.name}${isNullType(
     resolveFieldType(toTypeScriptPrimitive(getTypeName(f.type.fieldType), t), f.type.fieldType),
