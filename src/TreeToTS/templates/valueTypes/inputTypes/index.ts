@@ -3,6 +3,7 @@ import { ParserField, TypeSystemDefinition, Helpers, TypeDefinition } from 'grap
 import { createInputType, resolveInputArg, resolveInputField } from '@/TreeToTS/templates/valueTypes/inputTypes/arg';
 import { plusDescription } from '@/TreeToTS/templates/shared/description';
 import { INPUTTYPES } from '@/TreeToTS/templates/valueTypes/models';
+import { toTypeNameFromEnum } from '../../shared/enums';
 
 const AliasType = (code: string): string => `AliasType<${code}>`;
 const resolveValueTypeFromRoot = (i: ParserField, rootNodes: ParserField[], enumsAndScalars: string[]): string => {
@@ -10,7 +11,7 @@ const resolveValueTypeFromRoot = (i: ParserField, rootNodes: ParserField[], enum
     return `["${i.name}"]:unknown`;
   }
   if (i.data.type === TypeDefinition.EnumTypeDefinition) {
-    return `["${i.name}"]:${i.name}`;
+    return `["${i.name}"]:${toTypeNameFromEnum(i.name)}`;
   }
   if (i.data.type === TypeDefinition.InputObjectTypeDefinition) {
     return `["${i.name}"]: {\n${i.args.map((f) => resolveInputArg(f)).join(',\n')}\n}`;

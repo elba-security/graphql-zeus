@@ -4,11 +4,12 @@ import { resolveUnionMember } from '@/TreeToTS/templates/returnedTypes/unionMemb
 import { plusDescription } from '@/TreeToTS/templates/shared/description';
 import { resolveField } from '@/TreeToTS/templates/shared/field';
 import { ParserField, TypeDefinition, TypeSystemDefinition, Helpers } from 'graphql-js-tree';
+import { toTypeNameFromEnum } from '../shared/enums';
 
 const resolveType = ({ data, name, args }: ParserField, rootNodes: ParserField[]) => {
   switch (data.type) {
     case TypeDefinition.EnumTypeDefinition:
-      return `["${name}"]: ${name}`;
+      return `["${name}"]: ${toTypeNameFromEnum(name)}`;
     case TypeDefinition.InputObjectTypeDefinition:
       return `["${name}"]: {\n\t${args.map((f) => resolveField(f)).join(',\n')}\n}`;
 

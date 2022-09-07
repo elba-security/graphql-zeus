@@ -1,6 +1,7 @@
 import { plusDescription } from '@/TreeToTS/templates/shared/description';
 import { resolveField } from '@/TreeToTS/templates/shared/field';
 import { ParserField, TypeSystemDefinition, TypeDefinition } from 'graphql-js-tree';
+import { toTypeNameFromEnum } from '../shared/enums';
 
 export const MODEL_TYPES = 'ModelTypes';
 
@@ -9,7 +10,7 @@ const resolveTypeFromRoot = (i: ParserField, rootNodes: ParserField[]): string =
     return '';
   }
   if (i.data.type === TypeDefinition.EnumTypeDefinition) {
-    return `["${i.name}"]:${i.name}`;
+    return `["${i.name}"]:${toTypeNameFromEnum(i.name)}`;
   }
   if (i.data.type === TypeDefinition.ScalarTypeDefinition) {
     return `${plusDescription(i.description)}["${i.name}"]:any`;

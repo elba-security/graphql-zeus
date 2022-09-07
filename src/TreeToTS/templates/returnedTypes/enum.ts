@@ -1,11 +1,12 @@
 import { plusDescription } from '@/TreeToTS/templates/shared/description';
 import { ParserField } from 'graphql-js-tree';
+import { toTypeNameFromEnum } from '../shared/enums';
 
 export const resolveEnum = (i: ParserField): string => {
   if (!i.args) {
     throw new Error('Empty enum error');
   }
-  return `${plusDescription(i.description)}export const enum ${i.name} {\n${i.args
-    .map((f) => `\t${f.name} = "${f.name}"`)
-    .join(',\n')}\n}`;
+  const typeName = toTypeNameFromEnum(i.name);
+  const stringLiterals = i.args.map((f) => `'${f.name}'`).join(' | ');
+  return `${plusDescription(i.description)}export type ${typeName} = ${stringLiterals}\n`;
 };
