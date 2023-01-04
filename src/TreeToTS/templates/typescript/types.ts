@@ -51,7 +51,11 @@ type IsInterfaced<SRC extends DeepAnify<DST>, DST> = FlattenArray<SRC> extends Z
         >]: IsPayLoad<DST[P]> extends ${truthyType} ? SRC[P] : IsArray<SRC[P], DST[P]>;
       }
   : {
-      [P in keyof Pick<SRC, keyof DST>]: IsPayLoad<DST[P]> extends ${truthyType} ? SRC[P] : IsArray<SRC[P], DST[P]>;
+    [P in keyof Pick<SRC, keyof DST & keyof SRC>]: IsPayLoad<DST[P]> extends ${truthyType}
+      ? SRC[P]
+      : null extends SRC[P]
+      ? IsArray<SRC[P], DST[P]> | null
+      : IsArray<SRC[P], DST[P]>;
     };
 
 export type MapType<SRC, DST> = SRC extends DeepAnify<DST> ? IsInterfaced<SRC, DST> : never;
