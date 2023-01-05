@@ -1,6 +1,6 @@
 {
   "name": "@elba-security/graphql-zeus",
-  "version": "4.0.12",
+  "version": "4.0.14",
   "private": false,
   "license": "MIT",
   "description": "Generate Client Library for GraphQL Schema",
