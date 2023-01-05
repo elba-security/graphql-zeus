@@ -79,7 +79,6 @@ export type SubscriptionToGraphQL<Z, T> = {
   error: (fn: (e: { data?: InputType<T, Z>; errors?: string[] }) => void) => void;
   open: () => void;
 };
-export type SelectionFunction<V> = <T>(t: T | V) => T;
 export type fetchOptions = ArgsType<typeof fetch>;
 type websocketOptions = typeof WebSocket extends new (
   ...args: infer R

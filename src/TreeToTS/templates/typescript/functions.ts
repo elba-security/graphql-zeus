@@ -1,6 +1,5 @@
 import { Environment } from '@/Models';
 import {
-  ZeusSelectFunction,
   TypePropsResolverFunction,
   traverseToSeekArraysFunction,
   ScalarResolverFunction,
@@ -17,7 +16,6 @@ import {
 } from '@/TreeToTS/functions';
 
 export const typescriptFunctions = (env: Environment): string => `
-${ZeusSelectFunction.ts}
 ${ScalarResolverFunction.ts}
 ${TypePropsResolverFunction.ts}
 ${isArrayFunctionFunction.ts}

@@ -31,7 +31,7 @@ export const Thunder = (fn: FetchFunction) => <
   R extends keyof ${VALUETYPES} = GenericOperation<O>
 >(
   operation: O,
-) => <Z extends ${VALUETYPES}[R]>(o: Z | ${VALUETYPES}[R], ops?: OperationOptions) =>
+) => <Z extends ${VALUETYPES}[R]>(o: Z & ${VALUETYPES}[R], ops?: OperationOptions) =>
   fullChainConstruct(fn)(operation, allOperations[operation])(o as any, ops) as Promise<InputType<${TYPES}[R], Z>>;
 
 export const Chain = (...options: chainOptions) => Thunder(apiFetch(options));  
@@ -42,7 +42,7 @@ export const SubscriptionThunder = (fn: SubscriptionFunction) => <
 >(
   operation: O,
 ) => <Z extends ${VALUETYPES}[R]>(
-  o: Z | ${VALUETYPES}[R],
+  o: Z & ${VALUETYPES}[R],
   ops?: OperationOptions
 )=>
   fullSubscriptionConstruct(fn)(operation, allOperations[operation])(
@@ -67,13 +67,16 @@ const generateOperationsZeusTypeScript = ({ query, mutation, subscription }: Par
   R extends keyof ValueTypes = GenericOperation<O>
 >(
   operation: O,
-  o: Z | ${VALUETYPES}[R],
+  o: Z & ${VALUETYPES}[R],
   operationName?: string,
 ) => queryConstruct(operation, allOperations[operation], operationName)(o as any);`;
 };
 
 const generateSelectorsZeusTypeScript = () => {
-  return `export const Selector = <T extends keyof ${VALUETYPES}>(key: T) => ZeusSelect<${VALUETYPES}[T]>();`;
+  return `export const Selector =
+  <T extends keyof ${VALUETYPES}>(key: T) =>
+  <Z extends ${VALUETYPES}[T]>(o: Z & ${VALUETYPES}[T]): Z =>
+    o;`;
 };
 
 export const bodyTypeScript = (env: Environment, resolvedOperations: ResolvedOperations): string => `
