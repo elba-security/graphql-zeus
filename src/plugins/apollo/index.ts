@@ -8,7 +8,7 @@ const pluginApolloOps = ({ queryName, operation }: { queryName: string; operatio
     queryName,
     operation,
     ts: `export function useTyped${capitalized}<Z extends ValueTypes[O], O extends "${queryName}">(
-  ${operation}:  (Z & ValueTypes[O]) | ValueTypes[O],
+  ${operation}:  Z & ValueTypes[O],
   options?: ${capitalized}HookOptions<InputType<GraphQLTypes[O], Z>>,
   operationName?: string,
 ) {
