@@ -58,16 +58,6 @@ var htmlContent = {
     },
     "excerpt": ""
   },
-  "markdown/graphql/gql.md": {
-    "content": "\n## Generate GraphQL Gql Strings\n\nUse the `Zeus` function to generate a gql string\n\n```js\nimport { Zeus } from './zeus';\n\nconst stringGql = Zeus('query', {\n  listCards: {\n    name: true,\n    skills: true,\n    Attack: true,\n  },\n});\n\n// stringGql value:\n// query{listCards{name skills Attack}}\n```\n",
-    "data": {
-      "link": "graphql/gql",
-      "title": "Gql string",
-      "order": 4,
-      "category": "GraphQL"
-    },
-    "excerpt": ""
-  },
   "markdown/graphql/aliases.md": {
     "content": '\n## GraphQL Aliases\n\nZeus supports declaring aliases \u{1F978}\n\n```ts\nconst aliasedQueryExecute = await chain(\'query\')({\n  listCards: {\n    __alias: {\n      atak: {\n        attack: [\n          { cardID: [\'1\'] },\n          {\n            name: true,\n            description: true,\n          },\n        ],\n      },\n    },\n  },\n});\n```\n\nResponse:\n\n```json\n{\n  "listCards": [\n    {\n      "atak": {\n        "attack": [\n          {\n            "name": "Zelma",\n            "description": "Central"\n          }\n        ]\n      }\n    }\n  ]\n}\n```\n\nNow you can access properties type-safe like this\n\n```javascript\naliasedQueryExecute.listCards.map((c) => c.atak.attack);\n```\n',
     "data": {
@@ -85,6 +75,16 @@ var htmlContent = {
       "title": "Use as a library",
       "order": 5,
       "category": "Basics"
+    },
+    "excerpt": ""
+  },
+  "markdown/graphql/gql.md": {
+    "content": "\n## Generate GraphQL Gql Strings\n\nUse the `Zeus` function to generate a gql string\n\n```js\nimport { Zeus } from './zeus';\n\nconst stringGql = Zeus('query', {\n  listCards: {\n    name: true,\n    skills: true,\n    Attack: true,\n  },\n});\n\n// stringGql value:\n// query{listCards{name skills Attack}}\n```\n",
+    "data": {
+      "link": "graphql/gql",
+      "title": "Gql string",
+      "order": 4,
+      "category": "GraphQL"
     },
     "excerpt": ""
   },
@@ -118,22 +118,22 @@ var htmlContent = {
     },
     "excerpt": ""
   },
-  "markdown/basics/getting-started.md": {
-    "content": "\n## Getting Started\n\nUse the Zeus CLI to generate types and GraphQL clients based on your schema which you can then import into your projects to autocomplete, query and use GraphQL responses in a type-safe way.\n\n## Quick Start\n\n### Installation\n\n```sh\n$ npm i -g graphql-zeus\n# OR\n# yarn global add graphql-zeus\n```\n\nYou can also install locally to a project and then use as a npm or yarn script command or with `npx` or `yarn` directly eg:\n\n```sh\n$ npx zeus schema.graphql ./\n# OR\n# yarn zeus schema.graphql ./\n```\n\n### TypeScript\n\nZeus is Typescript native, you can refer to imported types directly from the generated output of the CLI\n\n```sh\n$ zeus schema.graphql ./\n```\n\n## Demo Endpoint\n\nAll demo code here is using the demo GraphQL endpoint of [Olympus Cards](https://app.graphqleditor.com/a-team/olympus) built with [GraphQL Editor](https://graphqleditor.com/). Feel free to check out the [GraphiQL interface](https://faker.graphqleditor.com/a-team/olympus/graphql) too.\n\n## Query With Zeus Chain Client\n\nYou can now use the Zeus `Chain` client from the generated output to make type-safe queries and mutations to your endpoint and receive type-safe responses.\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst listCardsAndDraw = await chain('query')({\n  cardById: [\n    {\n      cardId: 'da21ce0a-40a0-43ba-85c2-6eec2bf1ae21',\n    },\n    {\n      name: true,\n      description: true,\n    },\n  ],\n  listCards: {\n    name: true,\n    skills: true,\n    attack: [\n      { cardID: ['66c1af53-7d5e-4d89-94b5-1ebf593508f6', 'fc0e5757-4d8a-4f6a-a23b-356ce167f873'] },\n      {\n        name: true,\n      },\n    ],\n  },\n  drawCard: {\n    name: true,\n    skills: true,\n    Attack: true,\n  },\n});\n// listCardsAndDraw is now typed as the response of the query.\n```\n\nWhen querying a GraphQL field which takes an argument such as `cardById` above, then the fields are defined in terms of a tuple eg: cardById: `[ {...arguments} , {...response_selection_set} ]` the equivalent in gql syntax would be:\n\n```text\ncardById (cardId: \"da21ce0a-40a0-43ba-85c2-6eec2bf1ae21\") {\n  name\n  description\n}\n```\n\nFor fields which have no argument they receive only the response selection set object values.\n\nNote: `Chain` will also accept a second argument of fetch-like options to configure the client with properties such as `credentials`, `mode`, `headers` etc...\n\nNote: There is also an exported Zeus `Gql` convenience function is a Chain client pre-configured with the endpoint specified in the CLI.\n\n## Listen on a WebSocket - GraphQL Subscriptions\n\nUse the Zeus `Subscription` client creator in your generated output to create WebSocket connections to your GraphQL socket.\n\n```ts\nimport { Subscription } from './zeus';\n\n// Create a Subscription client instance with the endpoint\nconst sub = Subscription('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Call the client instance and listen for responses\nsub('subscription')({\n  deck: {\n    id: true,\n  },\n}).on((response) => {\n  console.log(response.deck);\n});\n```\n\n## Usage with NodeJS\n\nGenerates clients for use with Node.js\n\n```sh\n$ zeus schema.graphql ./  --node\n```\n\n## Usage with React Native\n\nAs normal\n\n```sh\n$ zeus schema.graphql ./\n```\n\n## Other CLI Options\n\nSpecify the output folder with second argument\n\n```sh\n$ zeus schema.graphql ./generated\n```\n\nOutput Typescript Only with `--typescript` flag\n\n```sh\n$ zeus schema.graphql ./ --typescript\n```\n\nLoad your schema from an URL with an URL in the first argument\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./\n```\n\nDownload and save GraphQL schema to a local path with `--graphql=savePath` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --graphql=generated\n```\n\nGenerate and save a JSON schema to a local path with `--jsonSchema=savePath` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --graphql=generated\n```\n\nAdd a header value with `--header=value` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --header=Authorization:myNiceAuthHeader\n```\n\nGet help with Zeus CLI with:\n\n```sh\n$ zeus help\n```\n\n### Tip:\n\nAdd a script entry in your `package.json` file for quickly calling Zeus generation:\n\n```json\n\"scripts\": {\n//...\n\"generate\": \"zeus https://faker.graphqleditor.com/a-team/olympus/graphql zeusGenerated --typescript --header='My-Auth-Secret:JsercjjJY5MmghtHww6UF' --apollo\"\n},\n```\n",
-    "data": {
-      "link": "getting-started",
-      "title": "Getting Started",
-      "order": 0,
-      "category": "Basics"
-    },
-    "excerpt": ""
-  },
   "markdown/basics/examples.md": {
     "content": "\n## Zeus Included Examples\n\nTo run the included examples navigate to: `./examples` and install packages with:\n\n```sh\n$ npm i\n# OR\n# yarn\n```\n\nthen run the examples with\n\n```sh\n$ npm run start\n# OR\n# yarn start\n```\n",
     "data": {
       "link": "examples",
       "title": "Examples",
       "order": 2,
+      "category": "Basics"
+    },
+    "excerpt": ""
+  },
+  "markdown/basics/getting-started.md": {
+    "content": "\n## Getting Started\n\nUse the Zeus CLI to generate types and GraphQL clients based on your schema which you can then import into your projects to autocomplete, query and use GraphQL responses in a type-safe way.\n\n## Quick Start\n\n### Installation\n\n```sh\n$ npm i -g graphql-zeus\n# OR\n# yarn global add graphql-zeus\n```\n\nYou can also install locally to a project and then use as a npm or yarn script command or with `npx` or `yarn` directly eg:\n\n```sh\n$ npx zeus schema.graphql ./\n# OR\n# yarn zeus schema.graphql ./\n```\n\n### TypeScript\n\nZeus is Typescript native, you can refer to imported types directly from the generated output of the CLI\n\n```sh\n$ zeus schema.graphql ./\n```\n\n## Demo Endpoint\n\nAll demo code here is using the demo GraphQL endpoint of [Olympus Cards](https://app.graphqleditor.com/a-team/olympus) built with [GraphQL Editor](https://graphqleditor.com/). Feel free to check out the [GraphiQL interface](https://faker.graphqleditor.com/a-team/olympus/graphql) too.\n\n## Query With Zeus Chain Client\n\nYou can now use the Zeus `Chain` client from the generated output to make type-safe queries and mutations to your endpoint and receive type-safe responses.\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst listCardsAndDraw = await chain('query')({\n  cardById: [\n    {\n      cardId: 'da21ce0a-40a0-43ba-85c2-6eec2bf1ae21',\n    },\n    {\n      name: true,\n      description: true,\n    },\n  ],\n  listCards: {\n    name: true,\n    skills: true,\n    attack: [\n      { cardID: ['66c1af53-7d5e-4d89-94b5-1ebf593508f6', 'fc0e5757-4d8a-4f6a-a23b-356ce167f873'] },\n      {\n        name: true,\n      },\n    ],\n  },\n  drawCard: {\n    name: true,\n    skills: true,\n    Attack: true,\n  },\n});\n// listCardsAndDraw is now typed as the response of the query.\n```\n\nWhen querying a GraphQL field which takes an argument such as `cardById` above, then the fields are defined in terms of a tuple eg: cardById: `[ {...arguments} , {...response_selection_set} ]` the equivalent in gql syntax would be:\n\n```text\ncardById (cardId: \"da21ce0a-40a0-43ba-85c2-6eec2bf1ae21\") {\n  name\n  description\n}\n```\n\nFor fields which have no argument they receive only the response selection set object values.\n\nNote: `Chain` will also accept a second argument of fetch-like options to configure the client with properties such as `credentials`, `mode`, `headers` etc...\n\nNote: There is also an exported Zeus `Gql` convenience function is a Chain client pre-configured with the endpoint specified in the CLI.\n\n## Listen on a WebSocket - GraphQL Subscriptions\n\nUse the Zeus `Subscription` client creator in your generated output to create WebSocket connections to your GraphQL socket.\n\n```ts\nimport { Subscription } from './zeus';\n\n// Create a Subscription client instance with the endpoint\nconst sub = Subscription('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Call the client instance and listen for responses\nsub('subscription')({\n  deck: {\n    id: true,\n  },\n}).on((response) => {\n  console.log(response.deck);\n});\n```\n\n## Usage with NodeJS\n\nGenerates clients for use with Node.js\n\n```sh\n$ zeus schema.graphql ./  --node\n```\n\n## Usage with React Native\n\nAs normal\n\n```sh\n$ zeus schema.graphql ./\n```\n\n## Other CLI Options\n\nSpecify the output folder with second argument\n\n```sh\n$ zeus schema.graphql ./generated\n```\n\nOutput Typescript Only with `--typescript` flag\n\n```sh\n$ zeus schema.graphql ./ --typescript\n```\n\nLoad your schema from an URL with an URL in the first argument\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./\n```\n\nDownload and save GraphQL schema to a local path with `--graphql=savePath` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --graphql=generated\n```\n\nGenerate and save a JSON schema to a local path with `--jsonSchema=savePath` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --graphql=generated\n```\n\nAdd a header value with `--header=value` flag\n\n```sh\n$ zeus https://faker.graphqleditor.com/a-team/olympus/graphql ./ --header=Authorization:myNiceAuthHeader\n```\n\nGet help with Zeus CLI with:\n\n```sh\n$ zeus help\n```\n\n### Tip:\n\nAdd a script entry in your `package.json` file for quickly calling Zeus generation:\n\n```json\n\"scripts\": {\n//...\n\"generate\": \"zeus https://faker.graphqleditor.com/a-team/olympus/graphql zeusGenerated --typescript --header='My-Auth-Secret:JsercjjJY5MmghtHww6UF' --apollo\"\n},\n```\n",
+    "data": {
+      "link": "getting-started",
+      "title": "Getting Started",
+      "order": 0,
       "category": "Basics"
     },
     "excerpt": ""
