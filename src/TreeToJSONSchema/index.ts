@@ -1,5 +1,6 @@
 import { Options, ParserField, ParserTree, ScalarTypes, TypeDefinition, ValueDefinition } from '@/Models';
-import { JSONSchema7 } from 'json-schema';
+
+type JSONSchema7 = any;
 
 export type JSONSchemaOverrideProperties<T> = Omit<JSONSchema7, 'properties'> & {
   properties: T extends {

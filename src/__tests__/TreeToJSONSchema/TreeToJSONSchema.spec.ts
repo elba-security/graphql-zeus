@@ -1,4 +1,3 @@
-import { JSONSchema7 } from 'json-schema';
 import { Parser } from 'graphql-js-tree';
 import { TreeToJSONSchema } from '../../TreeToJSONSchema';
 describe('TreeToJSONSchema tests', () => {
@@ -29,7 +28,7 @@ describe('TreeToJSONSchema tests', () => {
       person: {
         $ref: '#/inputs/CreatePerson',
       },
-    } as JSONSchema7);
+    });
 
     expect(schemaCode.types).not.toHaveProperty('Query');
     expect(schemaCode.types).not.toHaveProperty('Person');
